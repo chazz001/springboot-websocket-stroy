@@ -1,5 +1,6 @@
 package interceptor;
 
+import cn.hutool.json.JSONUtil;
 import com.xnpe.fchat.data.Message;
 import com.xnpe.fchat.data.MessageKey;
 import org.json.JSONObject;
@@ -40,10 +41,8 @@ public class MyHandler implements WebSocketHandler {
     @Override
     public void handleMessage(WebSocketSession webSocketSession, WebSocketMessage<?> webSocketMessage) {
         try {
-            JSONObject jsonobject = new JSONObject(webSocketMessage.getPayload().toString());
-            Message message = new Message(jsonobject.toString());
-            System.out.println(jsonobject.toString());
-            System.out.println(message + ":来自" + webSocketSession.getAttributes().get(MessageKey.KEY_WEBSOCKET_USERNAME) + "的消息");
+            Message message = JSONUtil.toBean(webSocketMessage.getPayload().toString(),Message.class);
+            System.out.println("来自【" + webSocketSession.getAttributes().get(MessageKey.KEY_WEBSOCKET_USERNAME) + "】的消息：" + message);
             if (message.getName() != null && message.getCommand() != null) {
                 switch (message.getCommand()) {
                     case MessageKey.ENTER_COMMAND:
@@ -62,8 +61,8 @@ public class MyHandler implements WebSocketHandler {
                     case MessageKey.LEAVE_COMMAND:
                         sendMessageToRoomUsers(message.getRoomId(), new TextMessage("【" + getNameFromSession(webSocketSession) + "】离开了房间，欢迎下次再来"));
                         break;
-                        default:
-                            break;
+                    default:
+                        break;
                 }
             }
         } catch (Exception e) {
@@ -82,7 +81,9 @@ public class MyHandler implements WebSocketHandler {
         if (roomId == null || name == null) return false;
         if (sUserMap.get(roomId) == null) return false;
         WebSocketSession session = sUserMap.get(roomId).get(name);
-        if (!session.isOpen()) return false;
+        if (!session.isOpen()) {
+            return false;
+        }
         try {
             session.sendMessage(message);
         } catch (IOException e) {

@@ -18,11 +18,8 @@ public class WebSocketServer {
 
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
-
     //接收roomId
     private String roomId = "";
-
-
 
     /**
      * 连接建立成功调用的方法
@@ -34,11 +31,10 @@ public class WebSocketServer {
         this.roomId = roomId;
         addSocketServer2Map(this);
         try {
-            sendMessage("连接成功", true);
+            sendMessage(this.session,"连接成功", true);
         } catch (IOException e) {
         }
     }
-
     /**
      * 连接关闭调用的方法
      */
@@ -81,33 +77,32 @@ public class WebSocketServer {
         error.printStackTrace();
     }
 
-    private String filterMessage(String message) {
-        if (message == null || message.isEmpty()) return null;
-        if ("undefined".equals(message)) return null;
-        return message;
-    }
-
     /**
      * 群发自定义消息
      */
     public static void sendInfo(String message, @PathParam("roomId") String roomId, Session session) {
-        if (roomId == null || roomId.isEmpty() || session == null) return;
+        if (roomId == null || roomId.isEmpty() || session == null) {
+            return;
+        }
         List<WebSocketServer> wssList = webSocketMap.get(roomId);
         for (WebSocketServer item : wssList) {
             try {
                 if (session.getId().equals(item.session.getId())) {
-                    item.sendMessage("已收到信息", true);
+                    sendMessage(item.session,"已收到信息", true);
                     continue;
                 }
-                item.sendMessage(message, false);
+                item.session.getBasicRemote().sendText(message);
             } catch (IOException e) {
+                e.printStackTrace();
                 continue;
             }
         }
     }
 
-    public String getClientMessage(String message) {
-        if (message == null || message.isEmpty()) return null;
+    public static String getClientMessage(String message) {
+        if (message == null || message.isEmpty()) {
+            return null;
+        }
         String[] split = message.split("\n\n");
         if (split.length == 2) {
             if (split[1] != null && !split[1].isEmpty()) {
@@ -131,7 +126,16 @@ public class WebSocketServer {
     /**
      * 实现服务器主动发送消息
      */
-    public void sendMessage(String message, boolean isDirect) throws IOException {
-        this.session.getBasicRemote().sendText(isDirect ? message :getClientMessage(message));
+    public static void sendMessage(Session session,String message, boolean isDirect) throws IOException {
+        session.getBasicRemote().sendText(isDirect ? message :getClientMessage(message));
+    }
+    private static String filterMessage(String message) {
+        if (message == null || message.isEmpty()) {
+            return null;
+        }
+        if ("undefined".equals(message)) {
+            return null;
+        }
+        return message;
     }
 }

@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class WsdrawApplication {
+public class TomcatWebsocketApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(WsdrawApplication.class, args);
+        SpringApplication.run(TomcatWebsocketApplication.class, args);
     }
 }

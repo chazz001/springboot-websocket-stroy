@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.draw</groupId>
-    <artifactId>wsdraw</artifactId>
+    <artifactId>tomcat-websocket</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>wsdraw</name>
+    <name>tomcat-websocket</name>
     <description>Draw Server Canvas</description>
 
     <parent>
@@ -39,6 +39,18 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!--   第三方组件     -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.5.1</version>
         </dependency>
     </dependencies>
 

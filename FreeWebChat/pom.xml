@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.xnpe.fchat</groupId>
-    <artifactId>demo</artifactId>
+    <artifactId>free-chat</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>demo</name>
+    <name>free-chat</name>
     <description>Demo project for Spring Boot WebSocket</description>
 
     <parent>
@@ -50,6 +50,19 @@
             <artifactId>json</artifactId>
             <version>20180130</version>
         </dependency>
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!--   第三方组件     -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.5.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>

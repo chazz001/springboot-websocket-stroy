@@ -1,23 +1,17 @@
 package com.xnpe.fchat.data;
 
+import cn.hutool.json.JSONUtil;
+import lombok.Data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+@Data
 public class Message implements MessageKey {
     private String roomId;
     private String name;
     private String command;
     private String info;
 
-    public Message(String json) {
-        if (json != null && json.length() > 0) {
-            JSONObject jsonObject = new JSONObject(json);
-            this.roomId = jsonObject.optString(KEY_ROOM_ID);
-            this.command = jsonObject.optString(KEY_MESSAGE_COMMAND);
-            this.info = jsonObject.optString(KEY_INFO);
-            this.name = jsonObject.optString(KEY_WEBSOCKET_USERNAME);
-        }
-    }
 
     public JSONObject toJson() {
         try {
@@ -33,19 +27,4 @@ public class Message implements MessageKey {
         return null;
     }
 
-    public String getRoomId() {
-        return roomId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCommand() {
-        return command;
-    }
-
-    public String getInfo() {
-        return info;
-    }
 }

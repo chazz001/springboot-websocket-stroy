@@ -1,7 +1,8 @@
 package interceptor;
 
+import cn.hutool.json.JSONUtil;
+import com.xnpe.fchat.data.Message;
 import com.xnpe.fchat.data.MessageKey;
-import org.json.JSONObject;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -17,14 +18,14 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
         if (serverHttpRequest instanceof ServletServerHttpRequest) {
             String INFO = serverHttpRequest.getURI().getPath().split("INFO=")[1];
             if (INFO != null && INFO.length() > 0) {
-                JSONObject jsonObject = new JSONObject(INFO);
-                String command = jsonObject.getString("command");
+                Message message = JSONUtil.toBean(INFO,Message.class);
+                String command = message.getCommand();
                 if (command != null && MessageKey.ENTER_COMMAND.equals(command)) {
-                    System.out.println("当前session的ID="+ jsonObject.getString("name"));
+                    System.out.println("当前session的ID="+ message.getName());
                     ServletServerHttpRequest request = (ServletServerHttpRequest) serverHttpRequest;
                     HttpSession session = request.getServletRequest().getSession();
-                    map.put(MessageKey.KEY_WEBSOCKET_USERNAME, jsonObject.getString("name"));
-                    map.put(MessageKey.KEY_ROOM_ID, jsonObject.getString("roomId"));
+                    map.put(MessageKey.KEY_WEBSOCKET_USERNAME, message.getName());
+                    map.put(MessageKey.KEY_ROOM_ID, message.getRoomId());
                 }
             }
         }
